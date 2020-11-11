@@ -1,0 +1,1249 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "description": "Container Saldo User digunakan untuk kebutuhan saldo user paydia.",
+        "version": "1.0.0",
+        "title": "Saldo User"
+    },
+    "servers": [{
+        "url": "http://svc-user-saldo.paydia/"
+    }],
+    "tags": [{
+            "name": "create check in",
+            "description": "membuat mutasi masuk dengan validasi pengecekan saldo berdasarkan tipe user dan total saldo masuk"
+        },
+        {
+            "name": "create check out",
+            "description": "membuat mutasi keluar dengan validasi pengecekan saldo"
+        },
+        {
+            "name": "check in",
+            "description": "pengecekan apakah bisa membuat mutasi saldo masuk"
+        },
+        {
+            "name": "check out",
+            "description": "pengecekan apakah bisa membuat mutasi saldo keluar"
+        },
+        {
+            "name": "create in",
+            "description": "membuat mutasi masuk tanpa validasi pengecekan saldo"
+        },
+        {
+            "name": "create out",
+            "description": "membuat mutasi keluar tanpa validasi pengecekan saldo"
+        },
+        {
+            "name": "update",
+            "description": "update data trx_id dan detail mutasi"
+        },
+        {
+            "name": "balance",
+            "description": "get saldo user"
+        }
+    ],
+    "paths": {
+        "/create_in_check/v10": {
+            "post": {
+                "tags": [
+                    "create check in"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/create_in_check"
+                            },
+                            "examples": {
+                                "request create mutasi masuk dengan cek": {
+                                    "$ref": "#/components/examples/request_create_in_check"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response create check in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/response_create_in_check"
+                                },
+                                "examples": {
+                                    "response sukses": {
+                                        "$ref": "#/components/examples/response_create_in_check"
+                                    },
+                                    "response failed message": {
+                                        "$ref": "#/components/examples/response_failed_message"
+                                    },
+                                    "response failed validation": {
+                                        "$ref": "#/components/examples/response_failed_validation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/create_out_check/v10": {
+            "post": {
+                "tags": [
+                    "create check out"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/create_out_check"
+                            },
+                            "examples": {
+                                "request create mutasi keluar dengan cek": {
+                                    "$ref": "#/components/examples/request_create_out_check"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response create check out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/response_create_out_check"
+                                },
+                                "examples": {
+                                    "response create mutasi keluar dengan cek": {
+                                        "$ref": "#/components/examples/response_create_out_check"
+                                    },
+                                    "response failed message": {
+                                        "$ref": "#/components/examples/response_failed_message"
+                                    },
+                                    "response failed validation": {
+                                        "$ref": "#/components/examples/response_failed_validation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/create_in/v10": {
+            "post": {
+                "tags": [
+                    "create in"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/create_in"
+                            },
+                            "examples": {
+                                "request create mutasi masuk tanpa cek": {
+                                    "$ref": "#/components/examples/request_create_in"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response create in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/response_create_in"
+                                },
+                                "examples": {
+                                    "response sukses": {
+                                        "$ref": "#/components/examples/response_create_in"
+                                    },
+                                    "response failed message": {
+                                        "$ref": "#/components/examples/response_failed_message"
+                                    },
+                                    "response failed validation": {
+                                        "$ref": "#/components/examples/response_failed_validation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/create_out/v10": {
+            "post": {
+                "tags": [
+                    "create out"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/create_out"
+                            },
+                            "examples": {
+                                "request create mutasi keluar dengan cek": {
+                                    "$ref": "#/components/examples/request_create_out"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response create out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/response_create_out"
+                                },
+                                "examples": {
+                                    "response create mutasi keluar tanpa cek": {
+                                        "$ref": "#/components/examples/response_create_out"
+                                    },
+                                    "response failed message": {
+                                        "$ref": "#/components/examples/response_failed_message"
+                                    },
+                                    "response failed validation": {
+                                        "$ref": "#/components/examples/response_failed_validation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/check_in/v10": {
+            "post": {
+                "tags": [
+                    "check in"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/check_in"
+                            },
+                            "examples": {
+                                "request cek mutasi masuk": {
+                                    "$ref": "#/components/examples/request_check_in"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response check in. true jika memungkinkan untuk tambah saldo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/response_check_in"
+                                },
+                                "examples": {
+                                    "response cek mutasi masuk": {
+                                        "$ref": "#/components/examples/response_check_in"
+                                    },
+                                    "response failed message": {
+                                        "$ref": "#/components/examples/response_failed_message"
+                                    },
+                                    "response failed validation": {
+                                        "$ref": "#/components/examples/response_failed_validation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/check_out/v10": {
+            "post": {
+                "tags": [
+                    "check out"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/check_out"
+                            },
+                            "examples": {
+                                "request cek mutasi keluar": {
+                                    "$ref": "#/components/examples/request_check_out"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response check out. true jika memungkinkan untuk potong saldo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/response_check_out"
+                                },
+                                "examples": {
+                                    "response cek mutasi keluar": {
+                                        "$ref": "#/components/examples/response_check_out"
+                                    },
+                                    "response failed message": {
+                                        "$ref": "#/components/examples/response_failed_message"
+                                    },
+                                    "response failed validation": {
+                                        "$ref": "#/components/examples/response_failed_validation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/balance/v10": {
+            "post": {
+                "tags": [
+                    "balance"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/balance"
+                            },
+                            "examples": {
+                                "request get saldo user (single user)": {
+                                    "$ref": "#/components/examples/request_balance_single"
+                                },
+                                "request get saldo user (multi user)": {
+                                    "$ref": "#/components/examples/request_balance_multi"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response balance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/response_balance"
+                                },
+                                "examples": {
+                                    "response saldo user (single user)": {
+                                        "$ref": "#/components/examples/response_balance_single"
+                                    },
+                                    "response saldo user (multi user)": {
+                                        "$ref": "#/components/examples/response_balance_multi"
+                                    },
+                                    "response failed message": {
+                                        "$ref": "#/components/examples/response_failed_message"
+                                    },
+                                    "response failed validation": {
+                                        "$ref": "#/components/examples/response_failed_validation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/update/v10": {
+            "post": {
+                "tags": [
+                    "update"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/update"
+                            },
+                            "examples": {
+                                "request update mutasi": {
+                                    "$ref": "#/components/examples/request_update"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response update",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/response_update"
+                                },
+                                "examples": {
+                                    "response update": {
+                                        "$ref": "#/components/examples/response_update"
+                                    },
+                                    "response failed message": {
+                                        "$ref": "#/components/examples/response_failed_message"
+                                    },
+                                    "response failed validation": {
+                                        "$ref": "#/components/examples/response_failed_validation"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "create_in_check": {
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "required": [
+                            "user_id",
+                            "user_type",
+                            "cart_id",
+                            "nominal"
+                        ],
+                        "properties": {
+                            "user_id": {
+                                "type": "integer"
+                            },
+                            "cart_id": {
+                                "type": "integer"
+                            },
+                            "user_type": {
+                                "type": "string",
+                                "enum": ["silver","gold"]
+                            },
+                            "nominal": {
+                                "type": "integer"
+                            },
+                            "misc": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "description": "create mutation check in. rules: nominal harus > 0. key misc berupa object/array dan digunakan untuk isi mutasi_detail di dalam db. user type berupa silver atau gold, cart_id bisa diisi 0"
+            },
+            "create_out_check": {
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "required": [
+                            "user_id",
+                            "user_type",
+                            "cart_id",
+                            "nominal"
+                        ],
+                        "properties": {
+                            "user_id": {
+                                "type": "integer"
+                            },
+                            "cart_id": {
+                                "type": "integer"
+                            },
+                            "user_type": {
+                                "type": "string",
+                                "enum": ["silver","gold"]
+                            },
+                            "nominal": {
+                                "type": "integer"
+                            },
+                            "misc": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "description": "create mutation check out. rules: nominal harus > 0. key misc berupa object/array dan digunakan untuk isi mutasi_detail di dalam db. user type berupa silver atau gold, cart_id bisa diisi 0"
+            },
+            "create_in": {
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "required": [
+                            "user_id",
+                            "cart_id",
+                            "nominal"
+                        ],
+                        "properties": {
+                            "user_id": {
+                                "type": "integer"
+                            },
+                            "cart_id": {
+                                "type": "integer"
+                            },
+                            "nominal": {
+                                "type": "integer"
+                            },
+                            "misc": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "description": "create mutation in. rules: nominal harus > 0. key misc berupa object/array dan digunakan untuk isi mutasi_detail di dalam db. cart_id bisa diisi 0"
+            },
+            "create_out": {
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "required": [
+                            "user_id",
+                            "cart_id",
+                            "nominal"
+                        ],
+                        "properties": {
+                            "user_id": {
+                                "type": "integer"
+                            },
+                            "cart_id": {
+                                "type": "integer"
+                            },
+                            "nominal": {
+                                "type": "integer"
+                            },
+                            "misc": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "description": "create mutation out. rules: nominal harus > 0. key misc berupa object/array dan digunakan untuk isi mutasi_detail di dalam db. cart_id bisa diisi 0"
+            },
+            "check_in": {
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "required": [
+                            "user_id",
+                            "user_type",
+                            "nominal"
+                        ],
+                        "properties": {
+                            "user_id": {
+                                "type": "integer"
+                            },
+                            "user_type": {
+                                "type": "string",
+                                "enum": ["silver","gold"]
+                            },
+                            "nominal": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                },
+                "description": "check mutation out. rules: nominal harus > 0. user type berupa silver atau gold."
+            },
+            "check_out": {
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "required": [
+                            "user_id",
+                            "user_type",
+                            "nominal"
+                        ],
+                        "properties": {
+                            "user_id": {
+                                "type": "integer"
+                            },
+                            "user_type": {
+                                "type": "string",
+                                "enum": ["silver","gold"]
+                            },
+                            "nominal": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                },
+                "description": "check mutation out. rules: nominal harus > 0. user type berupa silver atau gold."
+            },
+            "balance": {
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "required": [
+                            "user_id"
+                        ],
+                        "properties": {
+                            "user_id": {
+                                "type": "array",
+                                "items":{
+                                    "type":"integer"
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "get total balance user dalam array, bisa hanya 1 user_id dalam array"
+            },
+            "update": {
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "required": [
+                            "id"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "trx_id": {
+                                "type": "integer"
+                            },
+                            "misc": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "description": "update data trx_id dan detail mutasi"
+            },
+            "response_create_in_check": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties":{
+                            "id": {
+                                "type": "integer"
+                            },
+                            "saldo":{
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "error.validation",
+                                    "error.message"
+                                ]
+                            },
+                            "msg": {
+                                "type": "object",
+                                "properties": {
+                                    "default": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.create_failed",
+                                            "error.trx_limit",
+                                            "error.saldo_limit"
+                                        ]
+                                    },
+                                    "keys": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.required",
+                                            "error.data_type",
+                                            "error.notinlist"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "id pada data adalah id mutasi saldo. saldo pada data adalah saldo akhir user"
+            },
+            "response_create_out_check": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties":{
+                            "id": {
+                                "type": "integer"
+                            },
+                            "saldo":{
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "error.validation",
+                                    "error.message"
+                                ]
+                            },
+                            "msg": {
+                                "type": "object",
+                                "properties": {
+                                    "default": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.not_enough_balance",
+                                            "error.create_failed"
+                                        ]
+                                    },
+                                    "keys": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.required",
+                                            "error.data_type",
+                                            "error.notinlist"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "id pada data adalah id mutasi saldo. saldo pada data adalah saldo akhir user"
+            },
+            "response_create_in": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties":{
+                            "id": {
+                                "type": "integer"
+                            },
+                            "saldo":{
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "error.validation",
+                                    "error.message"
+                                ]
+                            },
+                            "msg": {
+                                "type": "object",
+                                "properties": {
+                                    "default": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.create_failed"
+                                        ]
+                                    },
+                                    "keys": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.required",
+                                            "error.data_type",
+                                            "error.notinlist"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "id pada data adalah id mutasi saldo. saldo pada data adalah saldo akhir user"
+            },
+            "response_create_out": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties":{
+                            "id": {
+                                "type": "integer"
+                            },
+                            "saldo":{
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "error.validation",
+                                    "error.message"
+                                ]
+                            },
+                            "msg": {
+                                "type": "object",
+                                "properties": {
+                                    "default": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.create_failed"
+                                        ]
+                                    },
+                                    "keys": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.required",
+                                            "error.data_type",
+                                            "error.notinlist"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "id pada data adalah id mutasi saldo. saldo pada data adalah saldo akhir user"
+            },
+            "response_check_in": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items":{
+                            "type":"string"
+                        }
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "error.validation",
+                                    "error.message"
+                                ]
+                            },
+                            "msg": {
+                                "type": "object",
+                                "properties": {
+                                    "default": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.trx_limit",
+                                            "error.saldo_limit"
+                                        ]
+                                    },
+                                    "keys": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.required",
+                                            "error.data_type",
+                                            "error.notinlist"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "id pada data adalah id mutasi saldo. saldo pada data adalah saldo akhir user"
+            },
+            "response_check_out": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items":{
+                            "type":"string"
+                        }
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "error.validation",
+                                    "error.message"
+                                ]
+                            },
+                            "msg": {
+                                "type": "object",
+                                "properties": {
+                                    "default": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.not_enough_balance"
+                                        ]
+                                    },
+                                    "keys": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.required",
+                                            "error.data_type",
+                                            "error.notinlist"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "id pada data adalah id mutasi saldo. saldo pada data adalah saldo akhir user"
+            },
+            "response_balance": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "result": {
+                                "type": "array",
+                                "items":{
+                                    "type": "object",
+                                    "properties":{
+                                        "user_id":{
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "error.validation"
+                                ]
+                            },
+                            "msg": {
+                                "type": "object",
+                                "properties": {
+                                    "keys": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.required",
+                                            "error.data_type"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "result pada data meruapakan hasil get saldo masing-masing user"
+            },
+            "response_update": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "boolean"
+                    },
+                    "data": {
+                        "type": "array",
+                        "items":{
+                            "type": "string"
+                        }
+                    },
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "error.validation"
+                                ]
+                            },
+                            "msg": {
+                                "type": "object",
+                                "properties": {
+                                    "keys": {
+                                        "type": "string",
+                                        "enum": [
+                                            "error.required",
+                                            "error.data_type"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "update mutasi"
+            }
+        },
+        "examples": {
+            "response_failed_validation": {
+                "value": {
+                    "status": false,
+                    "data": [],
+                    "error": {
+                        "type": "error.validation",
+                        "msg": {
+                            "merchant_id": "error.required"
+                        }
+                    }
+                }
+            },
+            "response_failed_message": {
+                "value": {
+                    "status": false,
+                    "data": [],
+                    "error": {
+                        "type": "error.message",
+                        "msg": {
+                            "default": "error.example"
+                        }
+                    }
+                }
+            },
+            "response_create_in_check": {
+                "value": {
+                    "status": true,
+                    "data": {
+                        "id": 1,
+                        "saldo": 50000
+                    }
+                }
+            },
+            "response_create_out_check": {
+                "value": {
+                    "status": true,
+                    "data": {
+                        "id": 1,
+                        "saldo": 50000
+                    }
+                }
+            },
+            "response_create_in": {
+                "value": {
+                    "status": true,
+                    "data": {
+                        "id": 1,
+                        "saldo": 50000
+                    }
+                }
+            },
+            "response_create_out": {
+                "value": {
+                    "status": true,
+                    "data": {
+                        "id": 1,
+                        "saldo": 50000
+                    }
+                }
+            },
+            "response_check_in": {
+                "value": {
+                    "status": true,
+                    "data": []
+                }
+            },
+            "response_check_out": {
+                "value": {
+                    "status": true,
+                    "data": []
+                }
+            },
+            "response_update": {
+                "value": {
+                    "status": true,
+                    "data": []
+                }
+            },
+            "response_balance_multi": {
+                "value": {
+                    "status": true,
+                    "data": {
+                        "result": [
+                            {
+                                "user": 1,
+                                "total": 90000
+                            },
+                            {
+                                "user_id": 2,
+                                "total": 30000
+                            }
+                        ]
+                    }
+                }
+            },
+            "response_balance_single": {
+                "value": {
+                    "status": true,
+                    "data": {
+                        "result": [
+                            {
+                                "user_id": 2,
+                                "total": 30000
+                            }
+                        ]
+                    }
+                }
+            },
+            "request_create_in_check": {
+                "value": {
+                    "data":{
+                        "user_id": 1,
+                        "cart_id": 1,
+                        "user_type": "gold",
+                        "nominal": 5000,
+                        "misc":{
+                            "contoh": "testing"
+                        }
+                    }
+                }
+            },
+            "request_create_out_check": {
+                "value": {
+                    "data":{
+                        "user_id": 1,
+                        "cart_id": 1,
+                        "user_type": "gold",
+                        "nominal": 5000,
+                        "misc":{
+                            "contoh": "testing"
+                        }
+                    }
+                }
+            },
+            "request_create_in": {
+                "value": {
+                    "data":{
+                        "user_id": 1,
+                        "cart_id": 1,
+                        "nominal": 5000,
+                        "misc":{
+                            "contoh": "testing"
+                        }
+                    }
+                }
+            },
+            "request_create_out": {
+                "value": {
+                    "data":{
+                        "user_id": 1,
+                        "cart_id": 1,
+                        "nominal": 5000,
+                        "misc":{
+                            "contoh": "testing"
+                        }
+                    }
+                }
+            },
+            "request_check_in": {
+                "value": {
+                    "data":{
+                        "user_id": 1,
+                        "user_type": "gold",
+                        "nominal": 5000
+                    }
+                }
+            },
+            "request_check_out": {
+                "value": {
+                    "data":{
+                        "user_id": 1,
+                        "user_type": "gold",
+                        "nominal": 5000
+                    }
+                }
+            },
+            "request_balance_single": {
+                "value": {
+                    "data":{
+                        "user_id": [1]
+                    }
+                }
+            },
+            "request_balance_multi": {
+                "value": {
+                    "data":{
+                        "user_id": [1,2]
+                    }
+                }
+            },
+            "request_update": {
+                "value": {
+                    "data":{
+                        "id": 1,
+                        "trx_id": 2,
+                        "misc":{
+                            "note": "saldo masuk"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

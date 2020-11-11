@@ -1,0 +1,278 @@
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: paydia # maksimum 15 char (kebab-case)
+# ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-trx-config
+  namespace: paydia
+data:
+  user.uid: "1000"
+  user.gid: "1000"
+  git.user: "ivandtc"
+  git.pass: "ivan.2019"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: utrx-mariadb
+  namespace: paydia
+data:
+  db.host: "192.168.1.99"
+  db.user: "datacell"
+  db.backend: "paydia_dev_db"
+---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: mariadb-creds
+#   namespace: paydia
+# type: Opaque
+# data:
+#   mysql-password: MTIzNDU2
+# ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-put-setup
+  namespace: paydia
+data:
+  url.json: |
+    {"url":""}
+  config.json: |
+    {"config":""}
+  test.json: |
+    {"test": "testing"}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: user-trx
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: user-trx
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    type: DirectoryOrCreate
+    path: "/d/GDrive05/DTC/Projects/vol/paydia-user-trx" # no PWD
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: claim-user-trx
+  namespace: paydia
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: user-trx
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: trx-hc
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: trx-hc
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    type: DirectoryOrCreate
+    path: "/d/GDrive05/DTC/Projects/vol/paydia/uploads/local" # no PWD
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: claim-trx-hc
+  namespace: paydia
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: trx-hc
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-trx
+  namespace: paydia
+spec:
+  selector:
+    matchLabels:
+      app: user-trx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: user-trx
+    spec:
+      containers:
+      - name: user-trx
+        image: paydia/ci:basic-v1.0
+        imagePullPolicy: Always
+        env:
+        - name: USER_GID
+          valueFrom:
+            configMapKeyRef:
+              name: user-trx-config
+              key: user.gid
+        - name: USER_UID
+          valueFrom:
+            configMapKeyRef:
+              name: user-trx-config
+              key: user.uid
+        - name: GIT_USER
+          valueFrom:
+            configMapKeyRef:
+              name: user-trx-config
+              key: git.user
+        - name: GIT_PASS
+          valueFrom:
+            configMapKeyRef:
+              name: user-trx-config
+              key: git.pass
+        - name: GIT_URL
+          value: "gitlab.com/paydia/paydia-user-trx.git"
+        - name: GIT_BRANCH
+          value: "master"
+        - name: CI_ENV
+          value: "development"
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: utrx-mariadb
+              key: db.host
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: utrx-mariadb
+              key: db.user
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-creds
+              key: mysql-password
+        - name: DB_DATABASE_BACKEND
+          valueFrom:
+            configMapKeyRef:
+              name: utrx-mariadb
+              key: db.backend
+        - name: PHP_MEMORY_LIMIT
+          value: "2048M"
+        - name: PHP_MAX_EXECUTION_TIME
+          value: "3600"
+        - name: PHP_UPLOAD_MAX_FILESIZE
+          value: "100M"
+        - name: PHP_POST_MAX_SIZE
+          value: "100M"
+        - name: PHP_LOG
+          value: "stdout"
+        - name: WORKER_PORT
+          value: "8080"
+        volumeMounts:
+        - mountPath: /var/www/html/application
+          name: claim-user-trx
+        - mountPath: /var/www/html/hc
+          name: claim-trx-hc
+        - mountPath: /var/www/html/config
+          name: claim-config-put
+        # livenessProbe:
+        #   exec:
+        #     command:
+        #     - php-fpm-healthcheck
+        #   initialDelaySeconds: 0
+        #   periodSeconds: 10
+        # readinessProbe:
+        #   exec:
+        #     command:
+        #     - php-fpm-healthcheck
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 10
+        # startupProbe:
+        #   exec:
+        #     command:
+        #     - php-fpm-healthcheck
+        #   failureThreshold: 10
+        #   periodSeconds: 10
+      - name: sidecar-nginx
+        image: paydia/nginx:sidecar-v1.0
+        imagePullPolicy: Always
+        env:
+        - name: USER_GID
+          valueFrom:
+            configMapKeyRef:
+              name: user-trx-config
+              key: user.gid
+        - name: USER_UID
+          valueFrom:
+            configMapKeyRef:
+              name: user-trx-config
+              key: user.uid
+        - name: NAMESPACE
+          value: "paydia"
+        ports:
+        - name: p-user-trx # maksimal 15 char
+          containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /healthcheck/
+            port: 80
+          initialDelaySeconds: 0
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /healthcheck/
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        # startupProbe:
+        #   httpGet:
+        #     path: /healthcheck/
+        #     port: 80
+        #   failureThreshold: 30
+        #   periodSeconds: 10
+      volumes:
+      - name: claim-user-trx
+        persistentVolumeClaim:
+          claimName: claim-user-trx
+      - name: claim-trx-hc
+        persistentVolumeClaim:
+          claimName: claim-trx-hc
+      - name: claim-config-put
+        configMap:
+          name: app-put-setup
+          items:
+          - key: config.json
+            path: config.json
+          - key: url.json
+            path: url.json
+          - key: test.json
+            path: test.json
+      # nodeSelector:
+      #   node: master
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  svc-user-trx # maksimal 15 char
+  namespace: paydia
+spec:
+  selector:
+    app: user-trx
+  type:  ClusterIP
+  sessionAffinity: ClientIP
+  ports:
+  - name: p-user-trx
+    port: 80
+    targetPort: p-user-trx
